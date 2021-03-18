@@ -46,7 +46,7 @@ class MessagingAdapter : ListAdapter<Message, RecyclerView.ViewHolder>(DiffCallb
         }
     }
 
-  private  class MessagingViewHolder(private val _binding: MessageItemBinding) :
+    private class MessagingViewHolder(private val _binding: MessageItemBinding) :
         RecyclerView.ViewHolder(_binding.root) {
 
         fun bind(_message: Message) {
@@ -57,7 +57,7 @@ class MessagingAdapter : ListAdapter<Message, RecyclerView.ViewHolder>(DiffCallb
         }
     }
 
-   private class BotMessagingViewHolder(private val binding: MessageItemBotBinding) :
+    private class BotMessagingViewHolder(private val binding: MessageItemBotBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(_message: Message) {
             binding.apply {
@@ -76,4 +76,5 @@ class MessagingAdapter : ListAdapter<Message, RecyclerView.ViewHolder>(DiffCallb
             return oldItem.id == newItem.id
         }
     }
+
 }

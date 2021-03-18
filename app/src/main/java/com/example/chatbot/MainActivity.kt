@@ -1,22 +1,17 @@
 package com.example.chatbot
 
-import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
-import com.example.chatbot.data.Message
 import com.example.chatbot.databinding.ActivityMainBinding
 import com.example.chatbot.ui.MessagingAdapter
-import com.example.chatbot.utils.Constants.OPEN_GOOGLE
-import com.example.chatbot.utils.Constants.OPEN_SEARCH
 import com.example.chatbot.view_model.Contract
 import com.example.chatbot.view_model.MessageViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     lateinit var messagingAdapter: MessagingAdapter
@@ -27,11 +22,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        binding.etMessage.addTextChangedListener { message ->
+            messageViewModel.onMessageChange(message.toString())
+        }
 
         binding.btnSend.setOnClickListener {
-            val message = binding.etMessage.text.toString()
-            val response = messageViewModel.addNewMessage(message)
-            botResponse(response)
+            messageViewModel.setEvent(Contract.Event.OnSendMessage)
             messagingAdapter.notifyDataSetChanged()
             binding.rvMessages.smoothScrollToPosition(messagingAdapter.itemCount)
             binding.etMessage.setText("")
@@ -59,29 +55,26 @@ class MainActivity : AppCompatActivity() {
                     is Contract.MessageListState.Success -> {
                         val messages = it.messagesList.list
                         messagingAdapter.submitList(messages)
+                        messagingAdapter.notifyDataSetChanged()
                     }
-                    is Contract.MessageListState.Error->{}
+                    is Contract.MessageListState.Error -> {
+                    }
+                }
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            messageViewModel.effect.collect {effect->
+                when(effect){
+                    is Contract.Effect.ShowToast ->{
+                        "Error".showToast()
+                    }
                 }
             }
         }
     }
 
-    private fun botResponse(response: String) {
-
-        when (response) {
-            OPEN_GOOGLE -> {
-                val site = Intent(Intent.ACTION_VIEW)
-                site.data = Uri.parse("https://www.google.com/")
-                startActivity(site)
-            }
-            OPEN_SEARCH -> {
-                val site = Intent(Intent.ACTION_VIEW)
-                val searchTerm: String? = response.substringAfterLast("search")
-                site.data = Uri.parse("https://www.google.com/search?&q=$searchTerm")
-                startActivity(site)
-            }
-
-        }
+    private fun String.showToast(){
+        Toast.makeText(this@MainActivity,this,Toast.LENGTH_SHORT).show()
     }
 
 }

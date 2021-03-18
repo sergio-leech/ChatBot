@@ -19,7 +19,7 @@
             android:layout_alignParentEnd="true"
             android:layout_margin="4dp"
             android:background="@drawable/send_box"
-            android:backgroundTint="#26A69A"
+            android:backgroundTint="#1ADB9B"
             android:padding="14dp"
             android:text="@{message.message}"
             tools:text="This is a sample message that will appear"

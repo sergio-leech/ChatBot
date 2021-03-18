@@ -1,8 +1,7 @@
 package com.example.chatbot.utils
 
 import android.annotation.SuppressLint
-import com.example.chatbot.utils.Constants.OPEN_GOOGLE
-import com.example.chatbot.utils.Constants.OPEN_SEARCH
+
 
 object BotResponse {
     @SuppressLint("DefaultLocale")
@@ -44,12 +43,7 @@ object BotResponse {
             message.contains("time") && message.contains("?") -> {
                 Time.timeStamp()
             }
-            message.contains("open") && message.contains("google") -> {
-                OPEN_GOOGLE
-            }
-            message.contains("search") -> {
-                OPEN_SEARCH
-            }
+
             else -> {
                 when (random) {
                     0 -> "I don't understand..."
@@ -59,6 +53,6 @@ object BotResponse {
                 }
             }
         }
-
     }
+
 }

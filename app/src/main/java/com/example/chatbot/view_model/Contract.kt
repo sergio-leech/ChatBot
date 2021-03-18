@@ -19,8 +19,8 @@ class Contract {
     sealed class MessageListState {
         object Idle : MessageListState()
         object Loading : MessageListState()
-        data class Success(val list:List<Message>) : MessageListState()
-        data class Error(val error: String?):MessageListState()
+        data class Success(val list: List<Message>) : MessageListState()
+        data class Error(val error: String?) : MessageListState()
     }
 
     /** Side effects*/
